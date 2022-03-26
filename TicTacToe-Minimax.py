@@ -62,22 +62,20 @@ def checkForDraw():
 def insertLetter(letter, position):
     if spaceIsFree(position):
         board[position] = letter
-        printBoard(board)
 
         if (checkForDraw()):
             print("Draw!")
             exit()
         if (checkForWin()):
-            if letter == 'X':
-                print("Bot wins!")
+            if letter == player:
+                print('Player wins!')
                 exit()
             else:
-                print("Player wins")
-                exit()
+                print('The bot wins!')
 
     
     else:
-        if letter == 'X':
+        if letter == player:
             print("That space is already played, try another!")
             position = int(input("Enter a new position: "))
             insertLetter(letter,position)
@@ -87,23 +85,42 @@ def insertLetter(letter, position):
             insertLetter(letter,position)
             return
 
-
-player = 'O'
-bot = 'X'
-
-def playerMove():
-    position = int(input("Enter the position for 'O': "))
-    insertLetter(player, position)
+def playerMove(letter):
+    position = int(input(f'Enter a board position: '))
+    insertLetter(letter, position)
     return
 
-def botMove():
+def botMove(letter):
     position = int(random.randint(0,9))
-    insertLetter(bot, position)
+    insertLetter(letter, position)
     return
 
-while not checkForWin():
-    printBoard(board)
-    playerMove()
-    botMove()
 
 
+def main():
+    global player
+    player = str(input("Select whether to play with 'X' or 'O' to start the game: "))
+    player = player.upper()
+    global bot
+    bot = str()
+    while (player != 'X') and (player != 'O'):
+        print("You did not enter an X or O, please try again!")
+        player = str(input("Select whether to play with 'X' or 'O' to start the game: "))
+        player = player.upper()
+        
+    if player == 'X':
+        bot = 'O'
+    else:
+        bot = 'X'
+        
+    print(f"Player has chosen {player}. Play your first move.. Good luck! \n\n" )
+    
+    while not checkForWin():
+        printBoard(board)
+        playerMove(player)
+        botMove(bot)
+
+    exit()
+        
+
+main()
