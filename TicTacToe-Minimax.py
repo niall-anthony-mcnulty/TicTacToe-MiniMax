@@ -1,3 +1,4 @@
+from http.client import REQUEST_URI_TOO_LONG
 import random as random
 
 
@@ -124,15 +125,41 @@ def playerMove(letter):
     insertLetter(letter, position)
     return
 
-
+# Easy Mode
 def botMove(letter):
-    if easyOrHard == 'N':
+    if easyOrHard == 'EASY':
         position = int(random.randint(0,10))
         insertLetter(letter, position)
-        
+        return
 
+# Hard Mode - Random chance the computer will play a random move or use the algorithm
+    elif easyOrHard == 'HARD':
+        magic_num = 3
+        if int(random.randint(0,4)) == 3:
+            position = int(random.randint(0,10))
+            insertLetter(letter, position)
+            return
+            
+        else:
+            bestScore = -1000
+            bestMove = 0
+            for key in board.keys():
+                if (board[key]== ' '):
+                    board[key] = bot
+                    score = minimax(board, 0, False)
+                    board[key] = ' '
+                    if (score > bestScore):
+                
+                        bestScore = score      
+                        bestMove = key
+                       
+            insertLetter(bot, bestMove)
+            return
+
+
+# God Mode - The bot will always use the minimax algorithm
     else:
-        if easyOrHard == 'Y':
+        if easyOrHard == 'GODMODE':
             bestScore = -1000
             bestMove = 0
             for key in board.keys():
@@ -190,10 +217,10 @@ def minimax(board, depth, isMaximizing):
 def main():
     # choosing whether to play against a bot with random generated picks or using the the minimax algorithm
     global easyOrHard
-    easyOrHard = str(input("Enter 'y' for GOD-MODE or 'n' for SIMP-MODE:   ")).upper()
+    easyOrHard = str(input("Enter which difficulty leve you want to play: Easy, Hard, or Godmode -->")).upper()
     print("\n\n")
-    while (easyOrHard != 'Y') and (easyOrHard != 'N'):
-        easyOrHard = str(input("Please make sure to type 'y' for GOD-MODE  or 'n' for SIMP-MODE when choosing your difficulty:  ")).upper()
+    while (easyOrHard != 'EASY') and (easyOrHard != 'HARD') and (easyOrHard != "GODMODE"):
+        easyOrHard = str(input("Incorrect difficulty input. Please try again! (Easy, Hard, Godmode) -->")).upper()
         print("\n\n")
     # choosing whether to play with the X or Y
     global player
